@@ -1,9 +1,9 @@
 {
-  "name": "blender-development",
-  "displayName": "Blender Development",
-  "description": "Tools to simplify Blender development.",
-  "version": "0.0.31",
-  "publisher": "JacquesLucke",
+  "name": "blender-dev-toolkit",
+  "displayName": "Blender Dev Toolkit",
+  "description": "Hendrik's fork of Blender Development by Jacques Lucke: tools to simplify Blender development.",
+  "version": "0.1.0",
+  "publisher": "kolibril13",
   "license": "MIT",
   "engines": {
     "vscode": "^1.63.0"
@@ -29,10 +29,10 @@
   "main": "./out/extension",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JacquesLucke/blender_vscode"
+    "url": "https://github.com/kolibril13/blender_vscode"
   },
   "bugs": {
-    "url": "https://github.com/JacquesLucke/blender_vscode/issues"
+    "url": "https://github.com/kolibril13/blender_vscode/issues"
   },
   "contributes": {
     "commands": [

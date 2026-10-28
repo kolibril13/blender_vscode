@@ -1,3 +1,8 @@
+> [!NOTE]
+> **Blender Dev Toolkit** is Jan-Hendrik Müller's fork of [Blender Development](https://github.com/JacquesLucke/blender_vscode) by Jacques Lucke.
+> It adds quick-action buttons (Start/Stop Blender, Run Script, Reload Addons), a `Build Extension` command and a new-addon template for Blender 4.2+ extensions.
+> Disable the original *Blender Development* extension before installing this one, since both register the same `blender.*` commands.
+
 > [!TIP] 
 > Check [CHANGELOG](./CHANGELOG.md) for changes and new features.
 > 

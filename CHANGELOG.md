@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## [0.1.0] - 2026-10-28
+
+First release of **Blender Dev Toolkit**, Jan-Hendrik Müller's fork of Blender Development by Jacques Lucke (based on 0.0.31).
+
+### Added
+
+* Quick Actions view in the Explorer with buttons to Start/Stop Blender, Run Script and Reload Addons ([#273](https://github.com/JacquesLucke/blender_vscode/pull/273)).
+* `Blender: Build Extension` command ([#263](https://github.com/JacquesLucke/blender_vscode/pull/263)).
+
+### Changed
+
+* New addon template targets Blender 4.2+ extensions only; legacy (<4.2) addon support dropped ([#262](https://github.com/JacquesLucke/blender_vscode/pull/262)).
+
 ## [0.0.31] - 2026-04-05
 
 ### Fixed
