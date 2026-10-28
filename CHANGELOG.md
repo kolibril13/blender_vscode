@@ -2,6 +2,127 @@
 
 ## Unreleased
 
+## [0.0.31] - 2026-04-05
+
+### Fixed
+
+* Pin axios to 1.14.0 to avoid security issues (official releases where not affected).
+
+## [0.0.30] - 2025-12-20
+
+### Fixed
+
+* Run Script: do not launch new Blender if the instance is busy.
+
+## [0.0.29] - 2025-11-29
+
+### Fixed
+
+* Removed operators were still shown in command palette.
+
+## [0.0.28] - 2025-11-28
+
+### Changed
+
+* Revamped readme
+
+### Fixed
+
+* Improve server startup error handling and retry logic ([#252](https://github.com/JacquesLucke/blender_vscode/pull/252))
+* Remove deprecated request library in favor of axios
+
+## [0.0.27] - 2025-11-25
+
+### Fixed
+
+- Use IANA-recommended port range ([#246](https://github.com/JacquesLucke/blender_vscode/pull/246))
+
+### Changed
+
+- Disconnecting debug session will now hard close/terminate blender
+
+### Added
+
+- A `blender.executable` can be now marked as default.
+  - When no blender is marked as default, a notification will appear after and offer setting it as default
+```json
+"blender.executables": [
+  {
+    "name": "blender-4.5.1",
+    "path": "C:\\...\\blender-4.5.1-windows-x64\\blender.exe",
+    "isDefault": true
+  }
+]
+```
+- Run `Blender: Start` using single button by adding snippet to `keybindings.json`. Other commands are not supported.
+
+Simple example:
+```json
+{
+    "key": "ctrl+h",
+    "command": "blender.start",
+}
+```
+
+Advanced example:
+```json
+{
+  "key": "ctrl+h",
+  "command": "blender.start",
+  "args": {
+    "blenderExecutable": {
+      "path": "C:\\...\\blender.exe"
+    },
+    // optional, run script after debugger is attached, must be absolute path
+    "script": "C\\script.py"
+  }
+}
+```
+- Improvements for `Blender: Run Script`:
+  - When **no** Blender instances are running, start blender automatically
+  - When Blender instances are running, just run the script on all available instances (consistent with old behavior)
+  - Run `Blender: Run Script` using single button by adding snippet to `keybindings.json`.
+
+Simple example:
+```json
+{
+  "key": "ctrl+shift+enter",
+  "command": "blender.runScript",
+  "when": "editorLangId == 'python'"
+}
+```
+
+Advanced example:
+```json
+{
+  "key": "ctrl+shift+enter",
+  "command": "blender.runScript",
+  "args": {
+    // optional, same format as item in blender.executables
+    // if missing user will be prompted to choose blender.exe or default blender.exe will be used
+    "blenderExecutable": {
+      "path": "C:\\...\\blender.exe"
+    },
+    // optional, run script after debugger is attached, must be absolute path, defaults to current open file
+    "script": "C:\\script.py"
+  },
+  "when": "editorLangId == 'python'"
+}
+```
+
+### Removed
+
+- Removed dependency on `ms-vscode.cpptools` what causes problems for other editors #235, #157. There are no plans to further support Blender Core development in this add-on.
+- Deprecated setting: `blender.core.buildDebugCommand`
+- Removed commands:
+  - `blender.build`
+  - `blender.buildAndStart`
+  - `blender.startWithoutCDebugger`
+  - `blender.buildPythonApiDocs`
+
+
+## [0.0.26] - 2025-08-14
+
 ### Added
 
 - Run `Blender: Start` using single button by adding snippet to `keybindings.json`. Other Commands (like `Blender: Build and Start`) are not supported ([#199](https://github.com/JacquesLucke/blender_vscode/pull/199)).
@@ -12,23 +133,28 @@
   "args": {
     "blenderExecutable": { // optional, same format as item in blender.executables
       "path": "C:\\...\\blender.exe" // optional, if missing user will be prompted to choose blender.exe
-    }
+    },
     // define command line arguments in setting blender.additionalArguments
 }
 ```
-- You can now configure VS code internal log level using [`blender.addon.logLevel`](vscode://settings/blender.addon.logLevel) ([#198](https://github.com/JacquesLucke/blender_vscode/pull/198))
+- You can now configure VS Code internal log level using [`blender.addon.logLevel`](vscode://settings/blender.addon.logLevel) ([#198](https://github.com/JacquesLucke/blender_vscode/pull/198))
   - to mute logs set log level to critical
   - to enable more logs set log level to debug
   - changing log level required blender restart
   - logs now have colors
-- 2 new operators: `blender.openWithBlender` - usable with right click from file explorer and `blender.openFiles` - usable from command pallete ([#225](https://github.com/JacquesLucke/blender_vscode/pull/225)).
-- 2 new settings: `blender.preFileArguments` and `blender.postFileArguments` - they work only with above new commands. Placement of file path within command line arguments is important, this this distincion was needed ([#225](https://github.com/JacquesLucke/blender_vscode/pull/225)).
+- Print python dependency version (log level info) and path (log level debug) even when it is already installed
+- 2 new operators: `blender.openWithBlender` - usable with right click from file explorer and `blender.openFiles` - usable from command palette ([#225](https://github.com/JacquesLucke/blender_vscode/pull/225)).
+- 2 new settings: `blender.preFileArguments` and `blender.postFileArguments` - they work only with above new commands. Placement of file path within command line arguments is important, this distincion was needed ([#225](https://github.com/JacquesLucke/blender_vscode/pull/225)).
   - `blender.postFileArguments` can not have `--` in args (it causes invalid syntax). Note: the `--` is used for passing arguments to python scripts inside blender.
   - `blender.additionalArguments` remains unchanged and will work only with `Blender: Start` command.
 
 ### Fixed
 
-- linux only: temporary viariable `linuxInode` will no longer be saved in vs code settings ([#208](https://github.com/JacquesLucke/blender_vscode/pull/208)).
+- Linux only: temporary variable `linuxInode` will no longer be saved in VS Code settings ([#208](https://github.com/JacquesLucke/blender_vscode/pull/208)).
+
+### Changed
+
+- updated dependency engines.vscode to 1.63 (to support beta releases)
 
 ## [0.0.25] - 2024-11-07
 

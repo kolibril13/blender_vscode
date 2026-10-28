@@ -2,11 +2,11 @@
   "name": "blender-development",
   "displayName": "Blender Development",
   "description": "Tools to simplify Blender development.",
-  "version": "0.0.25",
+  "version": "0.0.31",
   "publisher": "JacquesLucke",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.28.0"
+    "vscode": "^1.63.0"
   },
   "categories": [
     "Other"
@@ -14,10 +14,6 @@
   "activationEvents": [
     "onCommand:blender.start",
     "onCommand:blender.stop",
-    "onCommand:blender.build",
-    "onCommand:blender.buildAndStart",
-    "onCommand:blender.startWithoutCDebugger",
-    "onCommand:blender.buildPythonApiDocs",
     "onCommand:blender.reloadAddons",
     "onCommand:blender.newAddon",
     "onCommand:blender.newScript",
@@ -47,26 +43,6 @@
       {
         "command": "blender.stop",
         "title": "Stop",
-        "category": "Blender"
-      },
-      {
-        "command": "blender.build",
-        "title": "Build",
-        "category": "Blender"
-      },
-      {
-        "command": "blender.buildAndStart",
-        "title": "Build and Start",
-        "category": "Blender"
-      },
-      {
-        "command": "blender.startWithoutCDebugger",
-        "title": "Start without C Debugger",
-        "category": "Blender"
-      },
-      {
-        "command": "blender.buildPythonApiDocs",
-        "title": "Build Python API Docs",
         "category": "Blender"
       },
       {
@@ -135,9 +111,9 @@
                   "type": "string",
                   "description": "Custom name for this Blender version."
                 },
-                "isDebug": {
+                "isDefault": {
                   "type": "boolean",
-                  "description": "Is this executable a debug build.",
+                  "description": "Set default choice for blender executable. The interactive choise will no longer be offered.",
                   "default": false
                 }
               }
@@ -166,7 +142,7 @@
           "blender.addon.buildTaskName": {
             "type": "string",
             "scope": "resource",
-            "description": "Task that should be executed before the addon can be loaded into Blender."
+            "description": "Task that should be executed before every addon start and on every addon reload. Output will be shown in terminal."
           },
           "blender.addon.loadDirectory": {
             "type": "string",
@@ -217,7 +193,8 @@
             "type": "string",
             "scope": "resource",
             "description": "Command used to compile Blender.",
-            "default": "make debug"
+            "default": "make debug",
+            "deprecationMessage": "Removed in version 0.0.27"
           },
           "blender.scripts.directories": {
             "type": "array",
@@ -379,21 +356,26 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint \"src/**/*.ts\" --max-warnings=0"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.25",
-    "@types/request": "^2.48.1",
-    "@types/vscode": "^1.28.0",
-    "tslint": "^5.8.0",
-    "typescript": "^5.5.2"
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.63.0",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.7.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "request": "^2.87.0"
+    "axios": "1.14.0"
   },
   "extensionDependencies": [
-    "ms-python.python",
-    "ms-vscode.cpptools"
+    "ms-python.python"
   ]
 }
