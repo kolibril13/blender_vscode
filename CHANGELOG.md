@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [0.1.1] - 2026-10-28
+
+### Added
+
+* Extension icon, based on the Blender script icon by [@jenzdrich](https://blenderartists.org/t/new-icons-for-blender-2-8/1112701) ([CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)).
+
 ## [0.1.0] - 2026-10-28
 
 First release of **Blender Dev Toolkit**, Jan-Hendrik Müller's fork of Blender Development by Jacques Lucke (based on 0.0.31).
