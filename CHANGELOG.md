@@ -9,6 +9,7 @@ First release of **Blender Dev Toolkit**, Jan-Hendrik Müller's fork of Blender 
 ### Added
 
 * Quick Actions view in the Explorer with buttons to Start/Stop Blender, Run Script and Reload Addons ([#273](https://github.com/JacquesLucke/blender_vscode/pull/273)).
+* `blender.addon.reloadOnChange` setting: reload addons when their files change on disk, including changes made outside of VS Code.
 * `Blender: Build Extension` command ([#263](https://github.com/JacquesLucke/blender_vscode/pull/263)).
 
 ### Changed

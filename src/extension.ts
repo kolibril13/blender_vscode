@@ -7,6 +7,7 @@ import { RunningBlenders, startServer, stopServer } from './communication';
 import { COMMAND_newAddon } from './commands_new_addon';
 import { COMMAND_newOperator } from './commands_new_operator';
 import { factoryShowNotificationAddDefault } from './notifications';
+import { registerReloadOnChange } from './reload_on_change';
 import {
     COMMAND_newScript,
     COMMAND_openScriptsFolder,
@@ -54,6 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
         disposables.push(command);
     }
     disposables.push(...COMMAND_runScript_registerCleanup())
+    disposables.push(...registerReloadOnChange(reloadAddons));
 
     context.subscriptions.push(...disposables);
 
@@ -182,5 +184,6 @@ async function rebuildAddons(addons: AddonWorkspaceFolder[]) {
 async function HANDLER_updateOnSave(document: vscode.TextDocument) {
     if (isSavingForReload) return;
     let addons = await AddonWorkspaceFolder.All();
-    await reloadAddons(addons.filter(a => a.reloadOnSave));
+    // Addons with reloadOnChange are already reloaded by the file watcher.
+    await reloadAddons(addons.filter(a => a.reloadOnSave && !a.reloadOnChange));
 }

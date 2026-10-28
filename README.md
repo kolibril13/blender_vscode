@@ -56,6 +56,7 @@ VS code uses the [automatic logic to determine if you are using addon or extensi
 - Debugging is limited to workspace files by default. Disable [`blender.addon.justMyCode`](vscode://settings/blender.addon.justMyCode) if you want to step into third-party libraries (caution: this can make Blender less stable in rare cases).
 - Use `Blender: Reload Addons` after each change (requires Blender started via the extension).
 - Enable [`blender.addon.reloadOnSave`](vscode://settings/blender.addon.reloadOnSave) to trigger reload automatically on save.
+- Enable [`blender.addon.reloadOnChange`](vscode://settings/blender.addon.reloadOnChange) to reload whenever addon files change on disk, also when they are changed outside of VS Code (git, other editors, AI agents).
 
 
 > [!WARNING]
@@ -114,6 +115,7 @@ The extension is driven by settings (search for `blender.` inside VS Code settin
 - [`blender.executables`](vscode://settings/blender.executables): register frequently used Blender installations and **mark one with `"isDefault": true` to keep prompts silent**.
 - [`blender.addon.justMyCode`](vscode://settings/blender.addon.justMyCode): disable to step into third-party libraries while debugging.
 - [`blender.addon.reloadOnSave`](vscode://settings/blender.addon.reloadOnSave): reload addons every time a workspace file changes while Blender is running.
+- [`blender.addon.reloadOnChange`](vscode://settings/blender.addon.reloadOnChange): reload addons whenever their `.py`/`.toml` files change on disk, including edits made outside of VS Code.
 - [`blender.addon.logLevel`](vscode://settings/blender.addon.logLevel): control the verbosity of the Blender output channel for debugging.
 <details>
 <summary>

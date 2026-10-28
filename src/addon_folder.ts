@@ -44,6 +44,10 @@ export class AddonWorkspaceFolder {
         return <boolean>this.getConfig().get('addon.reloadOnSave');
     }
 
+    get reloadOnChange() {
+        return <boolean>this.getConfig().get('addon.reloadOnChange');
+    }
+
     get justMyCode() {
         return <boolean>this.getConfig().get('addon.justMyCode');
     }

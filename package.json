@@ -139,6 +139,12 @@
             "default": false,
             "description": "Reload addon in Blender when a document is saved."
           },
+          "blender.addon.reloadOnChange": {
+            "type": "boolean",
+            "scope": "resource",
+            "default": false,
+            "description": "Reload addon in Blender when a .py or .toml file in its source directory changes on disk, including changes made outside of VS Code (git, other editors, AI agents)."
+          },
           "blender.addon.justMyCode": {
             "type": "boolean",
             "scope": "resource",
