@@ -5,6 +5,7 @@
 > - [`blender.addon.reloadOnChange`](vscode://settings/blender.addon.reloadOnChange): reloads your addon whenever its files change on disk. Unlike the original `reloadOnSave`, which only reacts to saves inside VS Code, this also picks up changes from AI agents like Claude Code, `git checkout`/`pull`, other editors and formatters.
 > - A `Blender: Build Extension` command.
 > - A new-addon template for Blender 4.2+ extensions.
+>
 > Disable the original *Blender Development* extension before installing this one, since both register the same `blender.*` commands.
 >
 > The extension icon is based on the Blender script icon designed by [@jenzdrich](https://blenderartists.org/t/new-icons-for-blender-2-8/1112701), used under [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
