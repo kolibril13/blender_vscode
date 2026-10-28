@@ -3,7 +3,7 @@
   "displayName": "Blender Dev Toolkit",
   "description": "Hendrik's fork of Blender Development by Jacques Lucke: tools to simplify Blender development.",
   "version": "0.1.0",
-  "publisher": "kolibril13",
+  "publisher": "Jan-HendrikMueller",
   "license": "MIT",
   "engines": {
     "vscode": "^1.63.0"
