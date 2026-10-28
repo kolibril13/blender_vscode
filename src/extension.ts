@@ -157,11 +157,27 @@ async function COMMAND_reloadAddons() {
     await reloadAddons(await AddonWorkspaceFolder.All());
 }
 
+const RELOAD_RETRIES = 5;
+const RELOAD_RETRY_DELAY_MS = 2000;
+
+/** Time the last reload started. File changes older than this are already part of that reload. */
+export let lastReloadStartedAt = 0;
+
 async function reloadAddons(addons: AddonWorkspaceFolder[]) {
     if (addons.length === 0) return;
+    // Blender reads the files after this point, so everything written before is part of this reload.
+    const previousReloadStartedAt = lastReloadStartedAt;
+    lastReloadStartedAt = Date.now();
     let instances = await RunningBlenders.getResponsive();
+    // Blender may be busy (rendering, long running operator, paused at a breakpoint), so retry for a while.
+    for (let attempt = 1; instances.length === 0 && RunningBlenders.getAlive().length > 0 && attempt <= RELOAD_RETRIES; attempt++) {
+        outputChannel.appendLine(`Blender is not responding, retrying reload (${attempt}/${RELOAD_RETRIES})...`);
+        await new Promise(resolve => setTimeout(resolve, RELOAD_RETRY_DELAY_MS));
+        instances = await RunningBlenders.getResponsive();
+    }
     if (instances.length === 0) {
         outputChannel.appendLine('Reload skipped: no responsive Blender instance. Start Blender with "Blender: Start".');
+        lastReloadStartedAt = previousReloadStartedAt;
         return;
     }
 

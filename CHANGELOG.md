@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [0.1.3] - 2026-10-28
+
+### Fixed
+
+* `reloadOnChange`: when Blender is busy (rendering, long running operator, paused at a breakpoint), the reload is retried for up to 10 seconds instead of being skipped.
+* `Blender: Reload Addons` no longer reloads twice when `reloadOnChange` is enabled.
+
 ## [0.1.2] - 2026-10-28
 
 ### Fixed

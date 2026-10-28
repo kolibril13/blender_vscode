@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { AddonWorkspaceFolder } from './addon_folder';
-import { outputChannel } from './extension';
+import { lastReloadStartedAt, outputChannel } from './extension';
 
 // Wait for a burst of changes (git checkout, formatter, external editor) to settle before reloading.
 const RELOAD_DELAY_MS = 300;
@@ -13,17 +13,33 @@ type ReloadAddons = (addons: AddonWorkspaceFolder[]) => Promise<void>;
  */
 export function registerReloadOnChange(reloadAddons: ReloadAddons): vscode.Disposable[] {
     let watchers: vscode.Disposable[] = [];
-    let pending = new Map<string, AddonWorkspaceFolder>();
+    // Changed files per addon. `undefined` stands for a deleted file, which always needs a reload.
+    let pending = new Map<string, { addon: AddonWorkspaceFolder, uris: (vscode.Uri | undefined)[] }>();
     let timer: NodeJS.Timeout | undefined;
     let reloading = false;
+
+    // Skip changes that an already started reload picked up, e.g. files saved by "Blender: Reload Addons".
+    const isNewerThanLastReload = async (uri: vscode.Uri | undefined) => {
+        if (uri === undefined) return true;
+        try {
+            return (await vscode.workspace.fs.stat(uri)).mtime >= lastReloadStartedAt;
+        } catch {
+            return true;
+        }
+    };
 
     const flush = async () => {
         // Never run two reloads at once, changes made during a reload are picked up right after it.
         if (reloading || pending.size === 0) return;
         reloading = true;
-        const addons = [...pending.values()];
+        const entries = [...pending.values()];
         pending.clear();
         try {
+            const addons = [];
+            for (const { addon, uris } of entries) {
+                const changed = await Promise.all(uris.map(isNewerThanLastReload));
+                if (changed.some(c => c)) addons.push(addon);
+            }
             await reloadAddons(addons);
         } catch (error) {
             outputChannel.appendLine(`Reload on change failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -33,8 +49,11 @@ export function registerReloadOnChange(reloadAddons: ReloadAddons): vscode.Dispo
         void flush();
     };
 
-    const scheduleReload = (addon: AddonWorkspaceFolder) => {
-        pending.set(addon.uri.toString(), addon);
+    const scheduleReload = (addon: AddonWorkspaceFolder, uri?: vscode.Uri) => {
+        const key = addon.uri.toString();
+        const entry = pending.get(key) ?? { addon, uris: [] };
+        entry.uris.push(uri);
+        pending.set(key, entry);
         if (timer !== undefined) clearTimeout(timer);
         timer = setTimeout(() => {
             timer = undefined;
@@ -50,8 +69,8 @@ export function registerReloadOnChange(reloadAddons: ReloadAddons): vscode.Dispo
             const sourceDir = await addon.getSourceDirectory();
             const watcher = vscode.workspace.createFileSystemWatcher(
                 new vscode.RelativePattern(sourceDir, '**/*.{py,toml}'));
-            watcher.onDidChange(() => scheduleReload(addon));
-            watcher.onDidCreate(() => scheduleReload(addon));
+            watcher.onDidChange(uri => scheduleReload(addon, uri));
+            watcher.onDidCreate(uri => scheduleReload(addon, uri));
             watcher.onDidDelete(() => scheduleReload(addon));
             watchers.push(watcher);
         }
