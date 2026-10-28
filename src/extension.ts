@@ -160,7 +160,10 @@ async function COMMAND_reloadAddons() {
 async function reloadAddons(addons: AddonWorkspaceFolder[]) {
     if (addons.length === 0) return;
     let instances = await RunningBlenders.getResponsive();
-    if (instances.length === 0) return;
+    if (instances.length === 0) {
+        outputChannel.appendLine('Reload skipped: no responsive Blender instance. Start Blender with "Blender: Start".');
+        return;
+    }
 
     await rebuildAddons(addons);
     let names = await Promise.all(addons.map(a => a.getModuleName()));

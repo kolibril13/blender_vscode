@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { AddonWorkspaceFolder } from './addon_folder';
+import { outputChannel } from './extension';
 
 // Wait for a burst of changes (git checkout, formatter, external editor) to settle before reloading.
 const RELOAD_DELAY_MS = 300;
@@ -14,15 +15,30 @@ export function registerReloadOnChange(reloadAddons: ReloadAddons): vscode.Dispo
     let watchers: vscode.Disposable[] = [];
     let pending = new Map<string, AddonWorkspaceFolder>();
     let timer: NodeJS.Timeout | undefined;
+    let reloading = false;
+
+    const flush = async () => {
+        // Never run two reloads at once, changes made during a reload are picked up right after it.
+        if (reloading || pending.size === 0) return;
+        reloading = true;
+        const addons = [...pending.values()];
+        pending.clear();
+        try {
+            await reloadAddons(addons);
+        } catch (error) {
+            outputChannel.appendLine(`Reload on change failed: ${error instanceof Error ? error.message : String(error)}`);
+        } finally {
+            reloading = false;
+        }
+        void flush();
+    };
 
     const scheduleReload = (addon: AddonWorkspaceFolder) => {
         pending.set(addon.uri.toString(), addon);
         if (timer !== undefined) clearTimeout(timer);
         timer = setTimeout(() => {
             timer = undefined;
-            const addons = [...pending.values()];
-            pending.clear();
-            void reloadAddons(addons);
+            void flush();
         }, RELOAD_DELAY_MS);
     };
 

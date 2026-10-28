@@ -2,7 +2,7 @@
   "name": "blender-dev-toolkit",
   "displayName": "Blender Dev Toolkit",
   "description": "Hendrik's fork of Blender Development by Jacques Lucke: tools to simplify Blender development.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "Jan-HendrikMueller",
   "icon": "icons/extension_icon.png",
   "license": "MIT",

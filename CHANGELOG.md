@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [0.1.2] - 2026-10-28
+
+### Fixed
+
+* `reloadOnChange`: reloads no longer overlap. Changes made while a reload is running trigger one more reload right after it.
+* Reload errors and skipped reloads (no responsive Blender) are now logged to the output channel instead of failing silently.
+
 ## [0.1.1] - 2026-10-28
 
 ### Added
